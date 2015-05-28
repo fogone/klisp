@@ -5,30 +5,9 @@ import java.math.BigDecimal
 import kotlin.math.minus
 import kotlin.math.plus
 
-public class Parameters(public val scope:Scope, public val parameters:List<Token>) {
-
-    public fun head():Token = parameters.get(0)
-    public fun tail():List<Token> = parameters.subList(1, parameters.size())
-
-}
-
-public inline fun <reified E:Token> Parameters.get(index:Int):E {
-    require(parameters.size() > index)
-    val expression = parameters.get(index)
-    requireNotNull(expression)
-    // require(expression is E)
-    return expression as E
-}
-
-public inline fun <reified E:Token> Parameters.resolve(index:Int):E {
-    val expression = get<Token>(index).resolve(scope)
-    // require(expression is E, "Can't cast ")
-    return expression as E
-}
-
 trait Function {
 
-    fun call(parameters:Parameters):Token
+    fun call(parameters: Parameters):Token
 
 }
 
@@ -46,7 +25,7 @@ public class IfFunction() : Function {
 }
 
 public open class BinaryOperator<T, R:Token>(val body:(T, T)->R) : Function {
-    override fun call(parameters:Parameters): Token {
+    override fun call(parameters: Parameters): Token {
         val v1:Value<T> = parameters.resolve(0)
         val v2:Value<T> = parameters.resolve(1)
         return body(v1.value, v2.value)
@@ -68,7 +47,7 @@ public object Operators {
 
 public abstract class AbstractFunction(val parameters:List<String>, val body: Token) : Function {
 
-    override fun call(parameters:Parameters): Token {
+    override fun call(parameters: Parameters): Token {
         val functionScope = createScope(HierarchyScope(parameters.scope))
 
         require(this.parameters.size() == parameters.parameters.size(),
@@ -97,7 +76,7 @@ public class OrdinalFunction(val name:String, parameters:List<String>, body: Tok
 
 public class RegisterFunctionFunction() : Function {
 
-    override fun call(parameters:Parameters): Token {
+    override fun call(parameters: Parameters): Token {
         val name: Identifier = parameters.get(0)
 
         val arguments: Tuple = parameters.get(1)
@@ -115,7 +94,7 @@ public class RegisterFunctionFunction() : Function {
 
 public class ListFunctionFunction() : Function {
 
-    override fun call(parameters:Parameters): Token {
+    override fun call(parameters: Parameters): Token {
         return Tuple(parameters.tail().map { parameters.scope.resolve(it) }, false)
     }
 }
@@ -123,6 +102,6 @@ public class ListFunctionFunction() : Function {
 public class LambdaFunction() : Function {
 
     override fun call(parameters: Parameters): Token {
-
+        throw IllegalArgumentException()
     }
 }

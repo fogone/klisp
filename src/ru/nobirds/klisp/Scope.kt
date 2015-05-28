@@ -6,15 +6,15 @@ import java.util.HashMap
 
 public trait Scope {
 
-    fun resolveFunction(name:String): Function
+    public fun resolveFunction(name:String): Function
 
-    fun isFunctionRegistered(name:String):Boolean
+    public fun isFunctionRegistered(name:String):Boolean
 
-    fun resolveVariable(name:String): Token
+    public fun resolveVariable(name:String): Token
 
-    fun isVariableRegistered(name:String):Boolean
+    public fun isVariableRegistered(name:String):Boolean
 
-    fun resolve(token: Token): Token
+    public fun resolve(token: Token): Token
 
 }
 

@@ -1,6 +1,6 @@
 package ru.nobirds.klisp
 
-import ru.nobirds.klisp.expression.NilExpression
+import ru.nobirds.klisp.token.Predefined
 
 
 fun main(args: Array<String>) {
@@ -17,11 +17,10 @@ fun main(args: Array<String>) {
     ((lambda (x) (list x (list 'quote x))) '(lambda (x) (list x (list 'quote x))))
     """
 
-    val result = InterpretatorImpl().run(text2)
+    val result = Interpretator().run(text)
 
-    for (expression in scopeAndMain.main) {
-        val result = expression.resolve(scopeAndMain.scope)
-        if(result != NilExpression)
+    for (expression in result) {
+        if(expression != Predefined.Nil)
             println("Result: $result")
     }
     
